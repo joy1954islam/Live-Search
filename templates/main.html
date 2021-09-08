@@ -18,7 +18,7 @@ home
           <th scope="col">City</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="box">
          {% for employee in employees %}
             <tr>
               <th scope="row">{{ forloop.counter }}</th>
@@ -35,5 +35,42 @@ home
 {% endblock content %}
 
 {% block scripts %}
+<script>
+    const data = '{{qs_json}}'
+    console.log(data)
 
+    const rData = JSON.parse(data.replace(/&quot;/g, '"'))
+    console.log(rData)
+
+    const input = document.getElementById('search_here')
+    console.log(input)
+
+    let filteredArr = []
+
+    input.addEventListener('keyup', (e)=>{
+        box.innerHTML = ""
+        var i=1;
+        filteredArr = rData.filter(employee=> employee['first_name'].includes(e.target.value))
+        console.log(filteredArr)
+        if (filteredArr.length > 0){
+            filteredArr.map(employee=>{
+                box.innerHTML +=
+                `
+                    <tr>
+                         <th scope="row">${i++}</th>
+                          <td>${employee.first_name}</td>
+                          <td>${employee.last_name}</td>
+                          <td>${employee.email}</td>
+                          <td>${employee.age}</td>
+                          <td>${employee.address}</td>
+                          <td>${employee.city}</td>
+                    </tr>
+                `
+            })
+        } else {
+            box.innerHTML = "<b>No results found...</b>"
+        }
+    })
+
+</script>
 {% endblock scripts %}
