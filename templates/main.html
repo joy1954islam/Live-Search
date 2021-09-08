@@ -50,8 +50,15 @@ home
     input.addEventListener('keyup', (e)=>{
         box.innerHTML = ""
         var i=1;
-        filteredArr = rData.filter(employee=> employee['first_name'].includes(e.target.value))
-        console.log(filteredArr)
+
+        filteredArr = rData.filter(employee=> employee['first_name'].toLowerCase().indexOf(e.target.value.toLocaleLowerCase()) > -1
+         || employee['last_name'].toLowerCase().indexOf(e.target.value.toLocaleLowerCase()) > -1
+         || employee['email'].toLowerCase().indexOf(e.target.value.toLocaleLowerCase()) > -1
+         || employee['address'].toLowerCase().indexOf(e.target.value.toLocaleLowerCase()) > -1
+         || employee['city'].toLowerCase().indexOf(e.target.value.toLocaleLowerCase()) > -1
+         || employee['age'].toString().indexOf(e.target.value.toLocaleLowerCase()) > -1
+         )
+        console.log(' filter array = ',filteredArr)
         if (filteredArr.length > 0){
             filteredArr.map(employee=>{
                 box.innerHTML +=
