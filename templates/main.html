@@ -5,6 +5,7 @@ home
 {% endblock title %}
 
 {% block content %}
+    <h1>Live Search Using JavaScript and Django</h1>
     <input id="search_here" class="form-control mb-3" placeholder="type here to search.." />
     <table  class="table table-bordered">
       <thead>
@@ -32,9 +33,80 @@ home
          {% endfor %}
       </tbody>
     </table>
+
+    <br><br><br>
+    <h1>Live Search Using Ajax and Django</h1>
+    <input id="q" class="form-control mb-3" placeholder="type here to search.." />
+    <table  class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Last</th>
+          <th scope="col">Email</th>
+          <th scope="col">Age</th>
+          <th scope="col">Address</th>
+          <th scope="col">City</th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+         {% for employee in employees %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ employee.first_name }}</td>
+              <td>{{ employee.last_name }}</td>
+              <td>{{ employee.email }}</td>
+              <td>{{ employee.age }}</td>
+              <td>{{ employee.address }}</td>
+              <td>{{ employee.city }}</td>
+            </tr>
+         {% endfor %}
+      </tbody>
+    </table>
+
+
 {% endblock content %}
 
 {% block scripts %}
+<script>
+    $("#q").keyup(function (e) {
+        e.preventDefault();
+        var search = $(this).val();
+        console.log("search = ", search);
+
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'search_results' %}",
+            data: {"search": search},
+
+            success: function (response) {
+                var data = response.data;
+                var i=1;
+                myTable.innerHTML = "";
+                console.log('response data = ', response.data);
+                if (Array.isArray(data)){
+                  data.forEach(employee=>{
+                       myTable.innerHTML += `
+                            <tr>
+                                  <th scope="row">${i++}</th>
+                                  <td>${employee.first_name}</td>
+                                  <td>${employee.last_name}</td>
+                                  <td>${employee.email}</td>
+                                  <td>${employee.age}</td>
+                                  <td>${employee.address}</td>
+                                  <td>${employee.city}</td>
+                            </tr>
+                       `
+                  })
+                }
+            },
+            error: function (response) {
+                myTable.innerHTML = "<b>No results found...</b>"
+            }
+        })
+
+    })
+</script>
 <script>
     const data = '{{qs_json}}'
     console.log(data)

@@ -17,11 +17,12 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from search_1.views import EmployeeListView
+from search_1.views import EmployeeListView, search
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', EmployeeListView.as_view(), name='employees'),
+    path('search/', search, name='search_results'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
